@@ -27,7 +27,7 @@ itself. It holds two unrelated bodies of content — treat them independently:
 `agentic_software_company_challenge/` (10 mandatory company roles, ERPNext as company OS, **no
 grading**) — as-is, for WS 2026/27. Treat this as settled; do not re-open it.
 
-- `README.md` — placeholder, one line.
+- `README.md` — human-facing repo overview: course summary, directory map, status, license.
 - `WP_AgenticAI_Zusammenfassung.md` — **superseded / historical only.** Describes a different,
   not-adopted design (4 selectable tracks, a graded individual Hausarbeit, a Bewertungsraster) that
   conflicts with the decision above. Don't treat anything in it as current, and don't resurface that
