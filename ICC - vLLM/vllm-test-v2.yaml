@@ -1,0 +1,47 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: vllm-test-v2
+  namespace: inf-vllm
+spec:
+  restartPolicy: Never
+  containers:
+    - name: test
+      image: curlimages/curl:latest
+      command:
+        - sh
+        - -c
+        - |
+          echo "=== DNS-Tests in mehreren Varianten ==="
+          echo ""
+          echo "--- (a) Kurzform 'vllm-qwen25-7b' (gleicher Namespace) ---"
+          nslookup vllm-qwen25-7b 2>&1 || echo "FEHLGESCHLAGEN"
+          echo ""
+          echo "--- (b) Mit Namespace 'vllm-qwen25-7b.inf-vllm' ---"
+          nslookup vllm-qwen25-7b.inf-vllm 2>&1 || echo "FEHLGESCHLAGEN"
+          echo ""
+          echo "--- (c) FQDN 'vllm-qwen25-7b.inf-vllm.svc.cluster.local' ---"
+          nslookup vllm-qwen25-7b.inf-vllm.svc.cluster.local 2>&1 || echo "FEHLGESCHLAGEN"
+          echo ""
+          echo "--- (d) Gegenkontrolle: gleiche Auflösung für 'litellm' ---"
+          nslookup litellm.inf-vllm.svc.cluster.local 2>&1 || echo "FEHLGESCHLAGEN"
+          echo ""
+          echo "=== Direkte HTTP-Tests (falls DNS klappt) ==="
+          for host in vllm-qwen25-7b vllm-qwen25-7b.inf-vllm vllm-qwen25-7b.inf-vllm.svc.cluster.local; do
+            echo "--- $host ---"
+            curl -s -m 5 -w "HTTP %{http_code} | DNS=%{time_namelookup}s | Connect=%{time_connect}s\n" \
+              -o /dev/null \
+              "http://$host:8000/v1/models" || echo "curl fehlgeschlagen"
+          done
+          echo ""
+          echo "=== Resolver-Konfiguration ==="
+          cat /etc/resolv.conf
+          echo ""
+          echo "=== Fertig ==="
+      resources:
+        requests:
+          cpu: "100m"
+          memory: "64Mi"
+        limits:
+          cpu: "200m"
+          memory: "128Mi"

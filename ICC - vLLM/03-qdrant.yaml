@@ -1,0 +1,66 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: qdrant-pvc
+  namespace: wbb822
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: rook-ceph-block
+  resources:
+    requests:
+      storage: 20Gi
+
+---
+
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: qdrant
+  namespace: wbb822
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: qdrant
+  template:
+    metadata:
+      labels:
+        app: qdrant
+    spec:
+      containers:
+        - name: qdrant-container
+          image: qdrant/qdrant:v1.16.3 # https://hub.docker.com/r/qdrant/qdrant
+          ports:
+            - containerPort: 6333 # Qdrant web UI and REST API
+              protocol: TCP
+          resources:
+            requests:
+              cpu: 2
+              memory: "2Gi"
+            limits:
+              cpu: 2
+              memory: "2Gi"
+          volumeMounts:
+            - name: vector-storage
+              mountPath: "/qdrant/storage"
+      volumes:
+        - name: vector-storage
+          persistentVolumeClaim:
+            claimName: qdrant-pvc
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: qdrant
+  namespace: wbb822
+spec:
+  type: ClusterIP
+  ports:
+    - name: qdrant-api-ui
+      port: 6333
+      protocol: TCP
+      targetPort: 6333
+  selector:
+    app: qdrant

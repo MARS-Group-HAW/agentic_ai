@@ -1,0 +1,75 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: n8n-postgres-pvc
+  namespace: wbb822
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: rook-ceph-block
+  resources:
+    requests:
+      storage: 10Gi
+
+---
+
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: n8n-postgres
+  namespace: wbb822
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: n8n-postgres
+  template:
+    metadata:
+      labels:
+        app: n8n-postgres
+    spec:
+      containers:
+        - name: n8n-postgres-container
+          image: postgres:18.2-alpine # https://hub.docker.com/_/postgres
+          env:
+            - name: POSTGRES_DB
+              value: "n8n"
+            - name: POSTGRES_USER
+              value: "n8n"
+            - name: POSTGRES_PASSWORD
+              value: "ovzFrjSRBo7pL9Se"
+            - name: PGDATA # Required for volume mount, see https://github.com/docker-library/postgres/issues/952
+              value: "/var/lib/postgresql/data/pgdata"
+          ports:
+            - containerPort: 5432
+              protocol: TCP
+          resources:
+            requests:
+              cpu: 1
+              memory: "1Gi"
+            limits:
+              cpu: 1
+              memory: "1Gi"
+          volumeMounts:
+            - name: n8n-postgres-data
+              mountPath: "/var/lib/postgresql/data"
+      volumes:
+        - name: n8n-postgres-data
+          persistentVolumeClaim:
+            claimName: n8n-postgres-pvc
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: n8n-postgres
+  namespace: wbb822
+spec:
+  type: ClusterIP
+  ports:
+    - name: postgres
+      port: 5432
+      protocol: TCP
+      targetPort: 5432
+  selector:
+    app: n8n-postgres

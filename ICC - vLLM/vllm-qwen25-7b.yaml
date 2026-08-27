@@ -1,0 +1,99 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vllm-qwen25-7b
+  namespace: inf-vllm
+  labels:
+    app: vllm-qwen25-7b
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vllm-qwen25-7b
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: vllm-qwen25-7b
+    spec:
+      tolerations:
+        # GPU-Nodes sind getaintet, damit nur GPU-Workloads dort schedulen.
+        # 'Exists' matcht jeden Wert -- robust gegenüber unterschiedlichen
+        # Cluster-Konventionen (present / true / yes etc.).
+        - key: gpu-tesla-v100s
+          operator: "Exists"
+          effect: "NoSchedule"
+      containers:
+        - name: vllm
+          image: vllm/vllm-openai:v0.7.3
+          args:
+            - "--model=/models/Qwen2.5-7B-Instruct"
+            - "--served-model-name=qwen2.5-7b"
+            - "--dtype=half"
+            - "--max-model-len=8192"
+            - "--gpu-memory-utilization=0.90"
+            - "--enable-prefix-caching"
+            - "--host=0.0.0.0"
+            - "--port=8000"
+          ports:
+            - name: http
+              containerPort: 8000
+          env:
+            - name: HF_HUB_OFFLINE
+              value: "1"
+          volumeMounts:
+            - name: models
+              mountPath: /models
+              readOnly: true
+            - name: shm
+              mountPath: /dev/shm
+          resources:
+            requests:
+              cpu: "4"
+              memory: "16Gi"
+              nvidia.com/gpu: 1
+            limits:
+              cpu: "8"
+              memory: "32Gi"
+              nvidia.com/gpu: 1
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            failureThreshold: 30
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 300
+            periodSeconds: 30
+            failureThreshold: 3
+      volumes:
+        - name: models
+          persistentVolumeClaim:
+            claimName: vllm-pvc
+        - name: shm
+          emptyDir:
+            medium: Memory
+            sizeLimit: 4Gi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vllm-qwen25-7b
+  namespace: inf-vllm
+  labels:
+    app: vllm-qwen25-7b
+spec:
+  type: ClusterIP
+  selector:
+    app: vllm-qwen25-7b
+  ports:
+    - name: http
+      port: 8000
+      targetPort: 8000
+      protocol: TCP
