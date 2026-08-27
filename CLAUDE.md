@@ -4,24 +4,36 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository purpose
 
-This is a **course design and content repository**, not a software project. It holds the design
-documents, briefings, and templates for "Wahlpflichtprojekt Agentic AI" (Bachelor Informatik, HAW
-Hamburg, Prof. Dr. Thomas Clemen). There is no build system, package manifest, source code, or test
-suite here — all content is Markdown (plus a PDF/PPTX slide deck). Treat tasks in this repo as
-editing/authoring documentation, not writing or running code.
+This repo exists to support Prof. Dr. Thomas Clemen in **preparing and running** the "Wahlpflichtprojekt
+Agentic AI" elective at HAW Hamburg's Faculty of CS — it is planning material, not a deliverable
+itself. It holds two unrelated bodies of content — treat them independently:
 
-## Document map
+1. **Course design and content** (repo root + `agentic_software_company_challenge/`) — design
+   documents, briefings, and templates for "Wahlpflichtprojekt Agentic AI" (Bachelor Informatik, HAW
+   Hamburg, Prof. Dr. Thomas Clemen). No build system, package manifest, or test suite; all content
+   is Markdown (plus a PDF/PPTX slide deck). Treat tasks here as editing/authoring documentation, not
+   writing or running code.
+2. **`ICC - vLLM/`** — Kubernetes/deployment material for a self-hosted LLM service on HAW's ICC
+   compute cluster, used to give students API access to an open-weight model. This is ops
+   config (YAML manifests, a couple of Python scripts, setup docs), unrelated to the course-design
+   content above. See its own section below.
+
+## Course design content
+
+**Decided (2026-08-27): the course runs the software-company idea** —
+`agentic_software_company_challenge/` (10 mandatory company roles, ERPNext as company OS, **no
+grading**) — as-is, for WS 2026/27. Treat this as settled; do not re-open it.
 
 - `README.md` — placeholder, one line.
-- `WP_AgenticAI_Zusammenfassung.md` — German summary of the course's current design state: guiding
-  idea, the A/B experiment, the four project tracks, open decisions, and status of the three
-  deliverable documents (Praktikums-Aufgabenstellung, Hausarbeits-Aufgabenstellung,
-  Bewertungsraster). Read this first to understand what has been decided vs. still open.
-- `Agentic_AI_Wahlpflichtprojekt_Zusammenfassung.md` — longer/earlier working document covering the
-  same project (concept discussion history).
-- `agentic_software_company_challenge/` — the actual course package, one specific track scenario
-  ("Agentic Software Company Challenge" / "HarborFlow"), as a sequence of numbered Markdown files
-  meant to be read/released in order:
+- `WP_AgenticAI_Zusammenfassung.md` — **superseded / historical only.** Describes a different,
+  not-adopted design (4 selectable tracks, a graded individual Hausarbeit, a Bewertungsraster) that
+  conflicts with the decision above. Don't treat anything in it as current, and don't resurface that
+  conflict — it's resolved.
+- `Agentic_AI_Wahlpflichtprojekt_Zusammenfassung.md` — earlier brainstorm document (concept
+  discussion history) that already converges on the same software-company/no-grading idea that was
+  adopted; historical context only, not a source of open decisions.
+- `agentic_software_company_challenge/` — **the course package that ships**, as a sequence of
+  numbered Markdown files meant to be read/released in order:
   - `00`–`06`: core documents (course spec, student handbook, customer RFP, role cards, AI employee
     charter template, repo structure, decision log template). These can be published to students at
     the start of the semester.
@@ -33,7 +45,31 @@ editing/authoring documentation, not writing or running code.
   - `20_README.md`: index/manifest for this subfolder — update it if files are added, renamed, or
     reordered here.
 
-## Working conventions
+### Planning constraints for the run this content targets
+
+- Per `00_Course_Specification.md`: 12 Mondays, 10:00–16:00 (6h/session), fixed team size of **4**
+  students per company.
+- Current cohort planning figure is **~17 students** (mixed German/international) — this doesn't
+  divide evenly into teams of 4 (4 teams of 4 + 1 leftover). This isn't resolved in any doc yet;
+  needs an explicit decision (extra team of 5, floater, or adjust admission count) before rollout.
+- **No grading is a deliberate, confirmed choice** (`01_Student_Company_Handbook.md`: "There is no
+  grade") — not an open question. Don't propose reconciling it with graded-assessment models from
+  the superseded docs above.
+- **ERPNext hosting/deployment is not addressed anywhere in this repo** — no manifests, no doc —
+  even though Week 1 (`07_Monday_01_Found_the_Company.md`) requires a per-team ERPNext instance on
+  day one. This is the largest concrete technical gap for this course design; `ICC - vLLM/` currently
+  covers only the LLM service, not ERPNext. **Intended architecture (decided, not yet built):** one
+  ERPNext instance per company, matching `01_Student_Company_Handbook.md` ("its own ERPNext
+  instance") — needed for blast-radius isolation, since roles can reach Trust Level 5 (autonomous,
+  end-to-end) and companies independently redesign roles/workflows over the 12 weeks. Implement this
+  as **one shared Frappe bench with a separate site per company** (Frappe's native multi-tenancy:
+  isolated DB + URL + admin per site, one shared app install/upgrade) rather than fully separate
+  ERPNext stacks per team — same isolation the students see, far less ops burden than 4–5 independent
+  deployments. Only bench-level app installs are shared across companies; site-level customization
+  (custom fields, workflows, roles) stays isolated, which covers what teams need here. Will likely
+  need its own ICC resource quota/namespace, separate from the GPU-bound `inf-vllm` one.
+
+### Working conventions (course content)
 
 - **Language:** primary design/summary docs are in German; the course package
   (`agentic_software_company_challenge/`) is in English (it's student-facing, English is the course's
@@ -45,7 +81,48 @@ editing/authoring documentation, not writing or running code.
   (e.g. some drafts reference SS 2026 while the practicum is designed for WS 2026/27, and a
   deadline of Aug 16, 2026 appears in one place). Don't propagate a specific date/semester into new
   content without checking it against the current source doc first.
-- **Two-mode (A/B) experiment** is the connecting structure across the whole course: every team
-  builds the same task in "Full-Agentic" (Mode A) vs. "Mixed Team" (Mode B, human required in the
-  loop) and compares them empirically. This framing recurs across the course spec, weekly briefings,
-  and the Hausarbeit chapter structure — keep it consistent if editing any of them.
+- **No Mode-A/Mode-B experiment in this design.** The binary "Full-Agentic vs. Mixed Team" split only
+  exists in the superseded docs above. `agentic_software_company_challenge/` instead uses one
+  continuous 12-week company narrative per team, with autonomy dialed per role via the 5-level trust
+  scale (Advisory → Autonomous, see `01_Student_Company_Handbook.md`). Don't introduce an A/B split
+  when drafting related material — each company needs one persistent state, not two parallel runs.
+
+## `ICC - vLLM/` (cluster infra, unrelated to the course content above)
+
+Deploys a self-hosted, OpenAI-API-compatible LLM service (Qwen2.5, via vLLM) on HAW's ICC Kubernetes
+cluster, fronted by a LiteLLM proxy that issues per-student API keys, plus n8n and Qdrant for
+workflow/vector-store experimentation. `myNotes.md` (German) is the author's running scratch log of
+the setup; `final/vllm-litellm-setup.md` is the cleaned-up step-by-step build doc; `final/
+llm-service-fuer-studierende.md` is the student-facing usage guide for the resulting
+`https://llm.inf.haw-hamburg.de` endpoint.
+
+- Deployment order (each step's YAML is applied with `kubectl apply -f <file> -n inf-vllm`, waiting
+  for `kubectl get pods -n inf-vllm` to show `Running` before continuing): PVC for model weights →
+  HuggingFace token secret → model-download init job (`download-qwen25-*.yaml`) → vLLM deployment
+  (`04-vllm.yaml` / `final/vllm-qwen25-7b.yaml`) → PostgreSQL for LiteLLM (`litellm-postgres.yaml`) →
+  LiteLLM master-key secret → LiteLLM proxy (`litellm.yaml`) → ingress with HTTPS
+  (`final/ingress.yaml`) → per-student key generation (`final/rbac-students.yaml`,
+  `final/bulk_key_gen.py` reads `students*.csv` and calls the LiteLLM `/key/generate` API).
+  `final/vllm-litellm-setup.md` is the authoritative walkthrough, including a troubleshooting
+  section and two cleanup variants (selective vs. full teardown).
+  `01-n8n-postgres.yaml`/`02-n8n.yaml`/`03-qdrant.yaml` are auxiliary services (workflow automation,
+  vector store), independent of the vLLM/LiteLLM chain.
+- `final/` holds the current, cleaned-up version of each config/doc; `old/` (both at the top level
+  and inside `final/`) holds superseded drafts kept for reference only — don't edit them, and prefer
+  the `final/` version when the two overlap (e.g. `vllm-litellm-setup.md` exists in both).
+- **Hardware ceiling — read before proposing a different model:** the ICC cluster's GPUs are Tesla
+  **V100 (16GB) / V100S (32GB)**, Compute Capability 7.0. The current deployment is pinned to
+  `vllm/vllm-openai:v0.7.3` because *newer vLLM releases dropped CUDA kernels for V100 entirely* —
+  this caps not just which model fits, but which vLLM version (and therefore which models it
+  supports) can run here at all. Current model is Qwen2.5-7B, FP16, `--max-model-len=8192` (kept low
+  for lack of FlashAttention2 support on V100). A `download-qwen25-14b.yaml` job exists but isn't
+  wired into a deployment yet — 14B in FP16 (~28GB weights) is marginal on a 32GB card once KV cache
+  is added; would need testing or quantization (AWQ/GPTQ). Large MoE models (e.g. Kimi K2-class,
+  ~1T params / 32B active, realistically needing 8×H100/H200) are **not feasible** to self-host on
+  this cluster regardless of the vLLM-version constraint.
+- **Sensitive data is committed in this directory** — treat as live, not placeholder: `myNotes.md`
+  contains plaintext secrets (a HuggingFace token, a PostgreSQL password, a LiteLLM master key),
+  `04-vllm.yaml` has a separate plaintext HuggingFace token in its Secret manifest, and
+  `students*.csv` / `final/old/keys.csv` contain real student names, emails, Matrikelnummern, and
+  issued API keys. Don't paste, echo, or otherwise surface the contents of these specific files in
+  full, and don't reuse the embedded credentials as if they were placeholders.
