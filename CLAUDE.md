@@ -17,6 +17,9 @@ itself. It holds two unrelated bodies of content — treat them independently:
    compute cluster, used to give students API access to an open-weight model. This is ops
    config (YAML manifests, a couple of Python scripts, setup docs), unrelated to the course-design
    content above. See its own section below.
+3. **`ICC - ERPNext/`** — deployment *plan* (not yet executed) for the per-company ERPNext instances
+   the course design requires. Same ICC cluster as above, but an unrelated deployment (no GPU, own
+   namespace). See its own section below.
 
 ## Course design content
 
@@ -55,19 +58,13 @@ grading**) — as-is, for WS 2026/27. Treat this as settled; do not re-open it.
 - **No grading is a deliberate, confirmed choice** (`01_Student_Company_Handbook.md`: "There is no
   grade") — not an open question. Don't propose reconciling it with graded-assessment models from
   the superseded docs above.
-- **ERPNext hosting/deployment is not addressed anywhere in this repo** — no manifests, no doc —
-  even though Week 1 (`07_Monday_01_Found_the_Company.md`) requires a per-team ERPNext instance on
-  day one. This is the largest concrete technical gap for this course design; `ICC - vLLM/` currently
-  covers only the LLM service, not ERPNext. **Intended architecture (decided, not yet built):** one
-  ERPNext instance per company, matching `01_Student_Company_Handbook.md` ("its own ERPNext
-  instance") — needed for blast-radius isolation, since roles can reach Trust Level 5 (autonomous,
-  end-to-end) and companies independently redesign roles/workflows over the 12 weeks. Implement this
-  as **one shared Frappe bench with a separate site per company** (Frappe's native multi-tenancy:
-  isolated DB + URL + admin per site, one shared app install/upgrade) rather than fully separate
-  ERPNext stacks per team — same isolation the students see, far less ops burden than 4–5 independent
-  deployments. Only bench-level app installs are shared across companies; site-level customization
-  (custom fields, workflows, roles) stays isolated, which covers what teams need here. Will likely
-  need its own ICC resource quota/namespace, separate from the GPU-bound `inf-vllm` one.
+- **ERPNext hosting**: a deployment *plan* now exists (`ICC - ERPNext/erpnext-deployment-plan.md`) —
+  one shared Frappe bench with a separate site per company, matching `01_Student_Company_Handbook.md`
+  ("its own ERPNext instance") for blast-radius isolation without running 4–5 fully separate stacks.
+  **Not yet executed** — several items are explicitly unresolved in that doc (RWX/CephFS storage
+  class availability on ICC is the blocking one; also Helm permissions, exact frappe_docker image
+  tags/commands, DNS, and a new resource quota). See that file's "Offene Punkte" section before
+  building.
 
 ### Working conventions (course content)
 
@@ -126,3 +123,17 @@ llm-service-fuer-studierende.md` is the student-facing usage guide for the resul
   `students*.csv` / `final/old/keys.csv` contain real student names, emails, Matrikelnummern, and
   issued API keys. Don't paste, echo, or otherwise surface the contents of these specific files in
   full, and don't reuse the embedded credentials as if they were placeholders.
+
+## `ICC - ERPNext/` (planned cluster infra, not yet deployed)
+
+Contains `erpnext-deployment-plan.md`: a **draft plan** (German, matching the vLLM docs' language)
+for hosting the per-company ERPNext instances the course design requires — one shared Frappe bench,
+one isolated **site** per company (own DB, own subdomain, own admin login), reusing the same
+manifest style as `ICC - vLLM/` (`rook-ceph-block` for block storage, `cert-manager` +
+`letsencrypt-production` + nginx ingress). Unlike vLLM, this workload needs a **ReadWriteMany**
+volume for the shared `sites/` directory (multiple Frappe pods — web, socketio, scheduler, workers —
+all mount it at once); `rook-ceph-block` is RWO-only and won't work here, so confirming an RWX/CephFS
+storage class with ICC is the first blocking step. The doc marks every unverified specific (image
+tags, exact bench commands, RWX storage class name) with ⚠️ — treat those as placeholders to check
+against current [frappe_docker](https://github.com/frappe/frappe_docker) docs before applying
+anything, not as confirmed values. Nothing in this folder has been run against the real cluster yet.
