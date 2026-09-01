@@ -221,9 +221,13 @@ Open:
 
 ## 7. Run the starter tests
 
+Run the tests through the active Python interpreter:
+
 ```bash
-pytest
+python -m pytest
 ```
+
+The repository contains a `pytest.ini` that adds the repository root to Python's import path. This allows the starter tests to import `src` and `examples` consistently. Using `python -m pytest` is recommended because it also ensures that pytest is executed from the same Python environment in which the project dependencies were installed.
 
 ## 8. Run the supplied LangGraph reference example
 
