@@ -1,43 +1,253 @@
-# Wahlpflichtprojekt Agentic AI
+# Agentic AI Software Company – Starter Repository
 
-Course preparation repository for the **"Wahlpflichtprojekt Agentic AI"** elective (Bachelor
-Informatik, HAW Hamburg, Prof. Dr. Thomas Clemen), running WS 2026/27. This repo holds the design
-documents, student-facing course package, and supporting cluster infrastructure — it is planning
-and ops material, not a software deliverable itself.
+Starter repository for the HAW Hamburg elective project **Agentic AI / Human–Agent Software Company**.
 
-## The course, in short
+The repository provides a deliberately small, common technical baseline so that teams can focus on engineering a mixed human–agent software company instead of spending the first sessions resolving incompatible frameworks.
 
-Student teams of four each found a small **software company** that has to cover ten organizational
-roles — Managing Director, Account Manager, Requirements Engineer, Project Manager, Architect,
-Backend/Frontend Engineer, QA, DevOps, Security & Compliance — with only four humans available. The
-company delegates the remaining roles to AI employees at a self-chosen trust level (from advisory
-suggestions up to fully autonomous execution), builds a real customer product for a fictional
-customer ("HarborFlow Logistics") over 12 weekly sessions, and runs its own **ERPNext** instance as
-its company operating system. There is no grading — teams compete instead for awards such as *Best
-Human-Agent Organization* or *Most Spectacular Agent Failure*.
+## What is fixed
+
+- GitHub + GitHub Issues + GitHub Actions
+- Python **3.12**
+- LangChain + LangGraph
+- FastAPI + Pydantic
+- Docker + Docker Compose
+- pytest
+- PostgreSQL + pgvector
+- LLM via either
+  - local Ollama, or
+  - an OpenAI-compatible HAW ICC endpoint
+- structured local trace and cost data
+
+Additional frameworks, databases, vector stores, workflow engines, or observability platforms require prior approval.
+
+## Important: starter code does not count as team work
+
+Code under `examples/` and tests under `tests/starter/` are reference implementations supplied with the course.
+They exist to verify that the stack is wired correctly.
+
+For project evaluation:
+
+> **Do not count files under `examples/` or `tests/starter/` as evidence for an implemented company agent.**
+
+Teams must implement their own agents under `src/agents/`.
+
+Role staffing is also part of the project. During Session 1, teams distinguish `current_actor_type` from `target_actor_type`: a role can still be performed by a human while an agent implementation is planned. Session 1 requires one own operational LangGraph agent. By the end of Session 2, at least `12 - number of human team members` roles must be operationally supported by an agent or hybrid implementation. One agent implementation may support multiple roles only when role-specific behavior and outputs are technically distinguishable and traceable.
+
+See [`docs/STARTER_BOUNDARY.md`](docs/STARTER_BOUNDARY.md).
+
+---
 
 ## Repository structure
 
-| Path | Contents |
-|---|---|
-| `agentic_software_company_challenge/` | The course package that ships: course spec, student handbook, customer RFP, role cards, templates, and the twelve weekly "Monday" briefings (released one per week during the semester). Start with `00_Course_Specification.md`; see `20_README.md` for the full index. |
-| `WP_AgenticAI_Zusammenfassung.md`, `Agentic_AI_Wahlpflichtprojekt_Zusammenfassung.md` | German design-discussion history. Historical only — an earlier, differently-structured design considered along the way is not the one that shipped (see `agentic_software_company_challenge/` above for the current design). |
-| `ICC - vLLM/` | Kubernetes manifests and setup docs (German) for a self-hosted LLM service (Qwen2.5 via vLLM, fronted by a LiteLLM proxy issuing per-student API keys) on HAW's ICC compute cluster. Deployed and in use. |
-| `ICC - ERPNext/` | Draft deployment plan for per-company ERPNext instances on the same cluster — one shared Frappe bench, one isolated site per company. **Not yet deployed**; open items are listed in the plan itself. |
-| `Projekt Agentic AI - CLM_de.pdf` / `.pptx` | Slide deck. |
+```text
+.
+├── .github/
+│   ├── workflows/ci.yml
+│   ├── ISSUE_TEMPLATE/
+│   └── pull_request_template.md
+├── costs/
+│   ├── cost-model.yaml
+│   └── usage.csv
+├── db/
+│   └── init.sql
+├── docs/
+│   ├── architecture.md
+│   ├── ICC_CONFIGURATION.md
+│   └── STARTER_BOUNDARY.md
+├── examples/
+│   └── file_review_agent.py
+├── organization/
+│   ├── company.md
+│   └── roles.yaml
+├── src/
+│   ├── agents/
+│   ├── app/
+│   ├── llm/
+│   ├── observability/
+│   └── rag/
+├── tests/
+│   └── starter/
+├── .env.example
+├── Dockerfile
+├── docker-compose.yml
+└── requirements.txt
+```
 
-## Status
+---
 
-The course design is settled (software-company format, ERPNext-based, ungraded). Remaining open
-items — splitting ~17 students into teams of 4, the ERPNext infrastructure build-out, and a few
-date/semester labels that still need unifying across documents — are tracked in `CLAUDE.md`.
+# Quick start: local Python + Docker database + native Ollama
 
-## A note on `ICC - vLLM/`
+## 1. Prerequisites
 
-That folder contains real operational data from setting up the LLM service (API keys, a couple of
-infrastructure credentials, and a student roster). Treat it as sensitive, not as example/placeholder
-content, when sharing or reusing anything from it.
+- Git
+- Python 3.12
+- Docker Desktop / Docker Engine with Compose
+- Ollama if you want to run the LLM locally
 
-## License
+The application and PostgreSQL can run in Docker. On macOS, Ollama should normally run **natively on the host**, not inside Docker.
 
-MIT — see [LICENSE](LICENSE).
+## 2. Clone and configure
+
+```bash
+git clone <YOUR-REPOSITORY-URL>
+cd <YOUR-REPOSITORY>
+cp .env.example .env
+```
+
+## 3. Create a Python environment
+
+macOS / Linux:
+
+```bash
+python3.12 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+Windows PowerShell:
+
+```powershell
+py -3.12 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+## 4. Start PostgreSQL + pgvector
+
+```bash
+docker compose up -d db
+```
+
+Check it:
+
+```bash
+docker compose ps
+```
+
+## 5. Start Ollama locally
+
+Example model used by `.env.example`:
+
+```bash
+ollama pull qwen3:4b
+ollama serve
+```
+
+If Ollama is already running, the second command is unnecessary.
+
+## 6. Start FastAPI locally
+
+For local Python execution, set the Ollama URL in `.env` to:
+
+```text
+LLM_BASE_URL=http://localhost:11434
+EMBEDDING_BASE_URL=http://localhost:11434
+```
+
+Then:
+
+```bash
+python -m uvicorn src.app.main:app --reload
+```
+
+Open:
+
+- API docs: `http://localhost:8000/docs`
+- service health: `http://localhost:8000/health`
+- database health: `http://localhost:8000/db/health`
+
+## 7. Run the starter tests
+
+```bash
+pytest
+```
+
+## 8. Run the supplied LangGraph reference example
+
+This verifies LangGraph + LangChain + LLM + local trace logging:
+
+```bash
+python -m examples.file_review_agent --input src/app/main.py
+```
+
+The example writes a trace to `logs/agent-runs.jsonl`.
+
+Remember: this supplied example does **not** count as a team agent.
+
+---
+
+# Quick start: application in Docker
+
+Copy `.env.example` to `.env` and keep:
+
+```text
+LLM_BASE_URL=http://host.docker.internal:11434
+EMBEDDING_BASE_URL=http://host.docker.internal:11434
+```
+
+Then:
+
+```bash
+docker compose up --build
+```
+
+Docker Compose maps `host.docker.internal` to the Docker host also on Linux through `host-gateway`.
+
+---
+
+# Switching to HAW ICC
+
+If the provided ICC service exposes an OpenAI-compatible API, configure:
+
+```text
+LLM_PROVIDER=openai_compatible
+LLM_BASE_URL=https://<ICC-ENDPOINT>/v1
+LLM_API_KEY=<TOKEN-IF-REQUIRED>
+LLM_MODEL=<ICC-MODEL-NAME>
+```
+
+The agent code should not need to change. The same principle is used for embeddings.
+
+The exact ICC URL, model name and authentication method must be supplied by the course before use.
+See [`docs/ICC_CONFIGURATION.md`](docs/ICC_CONFIGURATION.md).
+
+---
+
+# LangSmith
+
+LangSmith is **not required** by this repository and is not part of the assessment baseline.
+
+If a team has permission to use it, LangChain/LangGraph tracing can be enabled through standard LangSmith environment variables. Local JSONL tracing remains mandatory for comparable project evidence.
+
+Do not send customer data, secrets, or protected data to an external tracing service.
+
+---
+
+# First team tasks
+
+The starter deliberately leaves these areas incomplete:
+
+1. complete `organization/company.md`
+2. assign all roles in `organization/roles.yaml`
+3. adapt `docs/architecture.md` to the team's real architecture
+4. define the team's cost assumptions in `costs/cost-model.yaml`
+5. implement at least one **team-owned** agent under `src/agents/`
+6. add meaningful tests outside `tests/starter/`
+7. create GitHub Issues for the work
+8. produce team-owned execution traces and cost evidence
+
+---
+
+# Compatibility policy
+
+The core dependency versions are pinned in `requirements.txt` to create the same baseline for all teams.
+Teams should not upgrade individual LangChain/LangGraph packages independently.
+
+If a package change is necessary:
+
+1. create an Issue,
+2. explain why the baseline is insufficient,
+3. document compatibility implications,
+4. request approval before merging the change.

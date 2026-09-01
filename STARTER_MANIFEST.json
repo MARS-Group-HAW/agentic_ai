@@ -1,0 +1,27 @@
+{
+  "name": "agentic-ai-software-company-starter",
+  "python_baseline": "3.12",
+  "created_for": "HAW Hamburg Agentic AI elective",
+  "core_versions": {
+    "fastapi": "0.141.1",
+    "langchain": "1.3.18",
+    "langgraph": "1.2.11",
+    "langchain-ollama": "1.1.0",
+    "langchain-openai": "1.6.0",
+    "langchain-postgres": "0.0.17",
+    "psycopg": "3.3.4",
+    "pytest": "9.1.1",
+    "pgvector_image": "pgvector/pgvector:0.8.6-pg17-bookworm"
+  },
+  "assessment_exclusions": [
+    "examples/**",
+    "tests/starter/**"
+  ],
+  "starter_revision": 3,
+  "mixed_team_rule": "operational agent/hybrid roles >= 12 - number_of_human_team_members by end of Session 2",
+  "role_model": {
+    "session_1": "current_actor_type and target_actor_type are separate; one own operational LangGraph agent required",
+    "session_2": "operational agent/hybrid-supported roles >= 12 - number_of_human_team_members"
+  },
+  "assessment_note": "Session 1 evaluates team delta: company setup, platform use, first own agent, tests/evidence, cost measurement, engineering process."
+}

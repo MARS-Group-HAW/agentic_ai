@@ -1,0 +1,19 @@
+# COURSE TEMPLATE – teams must review the assumptions during Session 1.
+# Credits are intentionally abstract and are not euros.
+# If the instructor fixes common rates for all companies, do not change them.
+
+human:
+  default_hour_credits: 100
+
+agent:
+  call_base_credits: 1.0
+  runtime_credits_per_second: 0.01
+  input_credits_per_1k_tokens: 0.02
+  output_credits_per_1k_tokens: 0.04
+
+ci:
+  run_credits: 1.0
+
+notes:
+  - Record actual usage separately from the cost assumptions.
+  - A local LLM still has modeled compute cost even if no API invoice exists.

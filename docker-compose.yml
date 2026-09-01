@@ -1,0 +1,51 @@
+services:
+  db:
+    image: pgvector/pgvector:0.8.6-pg17-bookworm
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-agentic_company}
+      POSTGRES_USER: ${POSTGRES_USER:-agentic}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-agentic_dev_only}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/001-init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-agentic} -d ${POSTGRES_DB:-agentic_company}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build: .
+    environment:
+      LLM_PROVIDER: ${LLM_PROVIDER:-ollama}
+      LLM_MODEL: ${LLM_MODEL:-qwen3:4b}
+      LLM_BASE_URL: ${LLM_BASE_URL:-http://host.docker.internal:11434}
+      LLM_API_KEY: ${LLM_API_KEY:-}
+      LLM_TEMPERATURE: ${LLM_TEMPERATURE:-0.0}
+      LLM_TIMEOUT_SECONDS: ${LLM_TIMEOUT_SECONDS:-120}
+      EMBEDDING_PROVIDER: ${EMBEDDING_PROVIDER:-ollama}
+      EMBEDDING_MODEL: ${EMBEDDING_MODEL:-nomic-embed-text}
+      EMBEDDING_BASE_URL: ${EMBEDDING_BASE_URL:-http://host.docker.internal:11434}
+      EMBEDDING_API_KEY: ${EMBEDDING_API_KEY:-}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-agentic}:${POSTGRES_PASSWORD:-agentic_dev_only}@db:5432/${POSTGRES_DB:-agentic_company}
+      LANGCHAIN_POSTGRES_URL: postgresql+psycopg://${POSTGRES_USER:-agentic}:${POSTGRES_PASSWORD:-agentic_dev_only}@db:5432/${POSTGRES_DB:-agentic_company}
+      TRACE_FILE: ${TRACE_FILE:-logs/agent-runs.jsonl}
+      COST_CALL_BASE_CREDITS: ${COST_CALL_BASE_CREDITS:-1.0}
+      COST_RUNTIME_CREDITS_PER_SECOND: ${COST_RUNTIME_CREDITS_PER_SECOND:-0.01}
+      COST_INPUT_CREDITS_PER_1K_TOKENS: ${COST_INPUT_CREDITS_PER_1K_TOKENS:-0.02}
+      COST_OUTPUT_CREDITS_PER_1K_TOKENS: ${COST_OUTPUT_CREDITS_PER_1K_TOKENS:-0.04}
+      LANGSMITH_TRACING: ${LANGSMITH_TRACING:-false}
+      LANGSMITH_API_KEY: ${LANGSMITH_API_KEY:-}
+      LANGSMITH_PROJECT: ${LANGSMITH_PROJECT:-agentic-ai-course}
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+volumes:
+  postgres_data:
