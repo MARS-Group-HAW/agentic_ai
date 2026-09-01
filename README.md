@@ -84,7 +84,23 @@ See [`docs/STARTER_BOUNDARY.md`](docs/STARTER_BOUNDARY.md).
 - Docker Desktop / Docker Engine with Compose
 - Ollama if you want to run the LLM locally
 
-The application and PostgreSQL can run in Docker. On macOS, Ollama should normally run **natively on the host**, not inside Docker.
+> **Docker must be running before you use `docker compose`.**  
+> On macOS and Windows, start **Docker Desktop** first. On Linux, make sure the Docker Engine/daemon is running.
+>
+> Verify Docker before continuing:
+>
+> ```bash
+> docker info
+> ```
+>
+> If this command cannot connect to the Docker daemon, `docker compose up` will fail as well.
+
+The recommended local setup is:
+
+- run **Ollama natively on the host machine**, and
+- use **Docker Compose for PostgreSQL/pgvector** and, if desired later, application services.
+
+This is particularly useful on macOS, where native Ollama can use Apple Metal acceleration while Docker Desktop does not provide the same GPU access to Ollama containers.
 
 ## 2. Clone and configure
 
@@ -115,6 +131,14 @@ pip install -r requirements.txt
 ```
 
 ## 4. Start PostgreSQL + pgvector
+
+Make sure Docker is running first:
+
+```bash
+docker info
+```
+
+Then start the database:
 
 ```bash
 docker compose up -d db
