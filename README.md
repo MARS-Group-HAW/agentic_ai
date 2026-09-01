@@ -150,16 +150,53 @@ Check it:
 docker compose ps
 ```
 
-## 5. Start Ollama locally
+## 5. Check and start Ollama locally
 
-Example model used by `.env.example`:
+The starter assumes a **recent Ollama version**. Before pulling the course model, check your installed version:
+
+```bash
+ollama --version
+```
+
+Then pull the example model used by `.env.example`:
 
 ```bash
 ollama pull qwen3:4b
+```
+
+### If `ollama pull` fails with HTTP 412
+
+A message such as:
+
+```text
+Error: pull model manifest: 412:
+The model you are attempting to pull requires a newer version of Ollama.
+```
+
+means that the locally installed Ollama version is too old for the current model manifest. Update Ollama using the official installer for your operating system, restart Ollama, and verify the installed version again:
+
+```bash
+ollama --version
+ollama pull qwen3:4b
+```
+
+Do not work around this error by changing the project dependencies or Docker configuration. It is an Ollama client/runtime version issue.
+
+After the model has been downloaded successfully, verify that it can be started:
+
+```bash
+ollama run qwen3:4b
+```
+
+Exit the interactive model session with `Ctrl+D` or `/bye`.
+
+Ollama usually starts its background service automatically when the desktop application is running. If no Ollama service is active, start it manually:
+
+```bash
 ollama serve
 ```
 
-If Ollama is already running, the second command is unnecessary.
+If Ollama is already running, `ollama serve` is unnecessary and may report that port `11434` is already in use.
 
 ## 6. Start FastAPI locally
 
