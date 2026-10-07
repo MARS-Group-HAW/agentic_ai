@@ -4,6 +4,15 @@ Starter repository for the HAW Hamburg elective project **Agentic AI / Human–A
 
 The repository provides a deliberately small, common technical baseline so that teams can focus on engineering a mixed human–agent software company instead of spending the first sessions resolving incompatible frameworks.
 
+## Course Documents / Kursunterlagen
+
+- Project briefing: [English](task%20sheets/01_Project_Briefing_en.md) / [Deutsch](task%20sheets/01_Projektbriefing_de.md)
+- Tasks for Sessions 1 and 2: [English](task%20sheets/Tasks_Session_1_and_2_en.md) / [Deutsch](task%20sheets/Aufgaben_Termin_1_und_2_de.md)
+- [Evaluation rubric for Sessions 1 and 2 (German)](task%20sheets/03_Bewertungsraster_GitHub_Termin_1_und_2_v3.2.md)
+- Setup instructions: [English](docs/SETUP_LOCAL_EN.md) / [Deutsch](docs/SETUP_LOCAL_DE.md)
+
+The sessions run on Mondays from **10:00 to 15:00**. Assessment evaluates the team's changes to the starter, not the supplied examples and tests.
+
 ## What is fixed
 
 - GitHub + GitHub Issues + GitHub Actions
@@ -53,7 +62,9 @@ See [`docs/STARTER_BOUNDARY.md`](docs/STARTER_BOUNDARY.md).
 ├── docs/
 │   ├── architecture.md
 │   ├── ICC_CONFIGURATION.md
-│   └── STARTER_BOUNDARY.md
+│   ├── STARTER_BOUNDARY.md
+│   ├── SETUP_LOCAL_DE.md
+│   └── SETUP_LOCAL_EN.md
 ├── examples/
 │   └── file_review_agent.py
 ├── organization/
@@ -65,6 +76,10 @@ See [`docs/STARTER_BOUNDARY.md`](docs/STARTER_BOUNDARY.md).
 │   ├── llm/
 │   ├── observability/
 │   └── rag/
+├── task sheets/
+│   ├── project briefings (German / English)
+│   ├── assignments (German / English)
+│   └── evaluation rubric (German)
 ├── tests/
 │   └── starter/
 ├── .env.example
@@ -323,3 +338,4 @@ If a package change is necessary:
 2. explain why the baseline is insufficient,
 3. document compatibility implications,
 4. request approval before merging the change.
+

@@ -210,10 +210,10 @@ It includes, among other things:
 
 The setup guides explain how to install and configure Python, Docker and Ollama or access the HAW ICC endpoint:
 
-- German: `docs/SETUP_LOCAL_DE.md`
-- English: `docs/SETUP_LOCAL_EN.md`
+- German: [SETUP_LOCAL_DE.md](../docs/SETUP_LOCAL_DE.md)
+- English: [SETUP_LOCAL_EN.md](../docs/SETUP_LOCAL_EN.md)
 
-The detailed assignments and submission checklists are in `02_Aufgaben_Termin_1_und_2_de.md` and `02_Aufgaben_Termin_1_und_2_en.md`. The evaluation criteria are in `03_Bewertungsraster_GitHub_Termin_1_und_2_v3.2.md`.
+The detailed assignments and submission checklists are in [Tasks Sessions 1 and 2 – English](Tasks_Session_1_and_2_en.md) and [Aufgaben Termin 1 und 2 – German](Aufgaben_Termin_1_und_2_de.md). The evaluation criteria are in the [Session 1 and 2 evaluation rubric (German)](03_Bewertungsraster_GitHub_Termin_1_und_2_v3.2.md).
 
 ### Standard Test Command
 
@@ -437,3 +437,4 @@ At least part of the implementation must be handled through your Agentic Develop
 Document the dry run in `docs/dry-run-01.md`, on no more than one page: implementation, people and agents involved, required corrections/approvals, costs per task, and one concrete improvement to try on the next task.
 
 The first customer assignment begins in Session 3.
+

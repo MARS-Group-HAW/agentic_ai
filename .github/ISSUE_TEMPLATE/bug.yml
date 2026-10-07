@@ -1,0 +1,23 @@
+name: Bug
+description: Report reproducible incorrect behaviour
+title: "[BUG] "
+labels: []
+body:
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction steps
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behaviour
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behaviour
+    validations:
+      required: true

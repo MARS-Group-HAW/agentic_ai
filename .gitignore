@@ -216,3 +216,6 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Generated agent logs; commit selected, sanitized evidence separately.
+logs/*.jsonl

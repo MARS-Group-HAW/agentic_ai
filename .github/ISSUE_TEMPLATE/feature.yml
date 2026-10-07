@@ -1,0 +1,35 @@
+name: Engineering task
+description: Plan a feature, infrastructure change, or agent task
+title: "[TASK] "
+labels: []
+body:
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal
+      description: What should be achieved?
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: How can completion be verified technically?
+    validations:
+      required: true
+  - type: dropdown
+    id: actor
+    attributes:
+      label: Intended actor
+      options:
+        - Human
+        - Agent
+        - Hybrid
+        - To be decided
+    validations:
+      required: true
+  - type: textarea
+    id: cost
+    attributes:
+      label: Expected cost / effort
+      description: Give a rough human and/or agent effort estimate.

@@ -261,7 +261,7 @@ LLM_BASE_URL=http://localhost:11434
 EMBEDDING_BASE_URL=http://localhost:11434
 ```
 
-Die mitgelieferte `.env.example` verwendet für diese URLs `host.docker.internal`, weil sie auch den Start der Anwendung im Container unterstützt. **Für den hier beschriebenen Einstieg mit Python auf dem Rechner müssen beide URLs auf `localhost` geändert werden.** Die Datenbank läuft weiterhin in Docker.
+Die aktuelle `.env.example` verwendet bereits `http://localhost:11434` für beide URLs. Das passt zum empfohlenen Einstieg mit Python auf eurem Rechner. Prüft diese Werte auch in einer bereits vorhandenen `.env`. Nur wenn die Anwendung im Container läuft und Ollama auf dem Rechner bleibt, verwendet ihr für beide URLs `http://host.docker.internal:11434`. Die Datenbank läuft weiterhin in Docker.
 
 #### Option B – HAW ICC
 
@@ -924,3 +924,4 @@ Termin 2:
 Ab Termin 3:
 
 > **Can this organization deliver value to a customer?**
+
