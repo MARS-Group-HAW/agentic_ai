@@ -290,6 +290,13 @@ Do not send customer data, secrets, or protected data to an external tracing ser
 
 ---
 
+## Detailed Setup Instructions
+
+Installing Python, Docker, and Ollama, as well as connection tests
+and troubleshooting: [Lokales Setup](docs/SETUP_LOCAL_DE.md) / [Local setup](docs/SETUP_LOCAL_EN.md).
+
+---
+
 # First team tasks
 
 The starter deliberately leaves these areas incomplete:
