@@ -4,22 +4,39 @@
 
 ```mermaid
 flowchart LR
-    Human[Human team members] --> GH[GitHub / Issues / PRs]
-    Agent[Team agents\nLangGraph + LangChain] --> GH
-    GH --> CI[GitHub Actions]
-    CI --> Tests[pytest]
+    subgraph Humans ["Human Team Members (Accountable Roles)"]
+        H_Roles["Yaw (MD/Customer/Data), Saad (PO/Int),<br/>Felix (PM/QA), Minh (Arch/Cost),<br/>Mirko (Backend/Safety), Muhammad (Agent/DevOps)"]
+    end
 
-    API[FastAPI] --> DB[(PostgreSQL + pgvector)]
-    Agent --> API
-    Agent --> LLM{LLM adapter}
-    LLM --> Ollama[Native Ollama]
-    LLM --> ICC[HAW ICC\nOpenAI-compatible endpoint]
+    Humans --> GH["GitHub / Issues / PRs"]
 
-    Agent --> Trace[Local JSONL traces]
-    Trace --> Cost[Cost analysis]
+    subgraph Agents ["Team Agents (LangGraph + LangChain)"]
+        DataAgent["data-agent\n(Data & RAG Engineer)\n[Primary Initial Agent]"]
+        OtherAgents["Other Role Agents\n(bae-agent, sa-agent, test-agent, etc.)"]
+    end
 
-    LangSmith[LangSmith\noptional / approval required]
-    Agent -. optional .-> LangSmith
+    Agents --> GH
+    GH --> CI["GitHub Actions"]
+    CI --> Tests["pytest"]
+    
+    %% Human Approval Gate vor Deployment
+    CI --> HumanGate{"Human Gate\n(Approval required\nbefore deployment)"}
+    HumanGate --> Deploy["Deployment / Produktion"]
+
+    %% Eskalationspfad bei Fehlern/Kritischem
+    Agents -.->|"Escalation:\nShutdown, Report & Rollback"| Humans
+
+    API["FastAPI"] --> DB[("(PostgreSQL + pgvector)")]
+    DataAgent --> API
+    Agents --> LLM{"LLM adapter"}
+    LLM --> Ollama["Native Ollama"]
+    LLM --> ICC["HAW ICC\nOpenAI-compatible endpoint"]
+
+    Agents --> Trace["Local JSONL traces"]
+    Trace --> Cost["Cost analysis\n(Cost spike: less credits,\nmore human effort)"]
+
+    LangSmith["LangSmith\n(optional / approval required)"]
+    Agents -. optional .-> LangSmith
 ```
 
 ## Baseline design decisions
