@@ -339,3 +339,11 @@ If a package change is necessary:
 3. document compatibility implications,
 4. request approval before merging the change.
 
+## Team setup
+
+Operating System: Windows 11
+Python Version: 3.12
+LLM Access: Ollama
+Model: qwen3:4b
+No setup deviations.
+Results of the starter tests, database check, and reference run are as expected in the setup document.
