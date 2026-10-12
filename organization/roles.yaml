@@ -29,7 +29,7 @@ roles:
     responsibility: Requirements, user stories, acceptance criteria, backlog value
     current_actor_type: human
     current_actor: TBD
-    target_actor_type: TBD
+    target_actor_type: agent
     target_actor: TBD
     accountable_human: TBD
     human_approval_required: TBD
@@ -40,7 +40,7 @@ roles:
     responsibility: Planning, task allocation, progress, dependencies, delivery risk
     current_actor_type: human
     current_actor: TBD
-    target_actor_type: TBD
+    target_actor_type: human
     target_actor: TBD
     accountable_human: TBD
     human_approval_required: TBD
@@ -51,7 +51,7 @@ roles:
     responsibility: System architecture, interfaces, ADRs, technical standards
     current_actor_type: human
     current_actor: TBD
-    target_actor_type: TBD
+    target_actor_type: agent
     target_actor: TBD
     accountable_human: TBD
     human_approval_required: TBD
@@ -62,7 +62,7 @@ roles:
     responsibility: FastAPI services, business logic, API contracts
     current_actor_type: human
     current_actor: TBD
-    target_actor_type: TBD
+    target_actor_type: agent
     target_actor: TBD
     accountable_human: TBD
     human_approval_required: TBD
@@ -73,7 +73,7 @@ roles:
     responsibility: PostgreSQL, pgvector, ingestion, chunking, retrieval, embeddings
     current_actor_type: human
     current_actor: TBD
-    target_actor_type: TBD
+    target_actor_type: agent
     target_actor: TBD
     accountable_human: TBD
     human_approval_required: TBD
@@ -106,7 +106,7 @@ roles:
     responsibility: pytest, regression testing, agent evaluation, quality evidence
     current_actor_type: human
     current_actor: TBD
-    target_actor_type: TBD
+    target_actor_type: human
     target_actor: TBD
     accountable_human: TBD
     human_approval_required: TBD
@@ -117,7 +117,7 @@ roles:
     responsibility: Docker, GitHub Actions, build, deployment and reproducibility
     current_actor_type: human
     current_actor: TBD
-    target_actor_type: TBD
+    target_actor_type: agent
     target_actor: TBD
     accountable_human: TBD
     human_approval_required: TBD
@@ -128,7 +128,7 @@ roles:
     responsibility: Tool permissions, guardrails, secrets, prompt and agent risks
     current_actor_type: human
     current_actor: TBD
-    target_actor_type: TBD
+    target_actor_type: human
     target_actor: TBD
     accountable_human: TBD
     human_approval_required: true
@@ -139,7 +139,7 @@ roles:
     responsibility: Traces, runtime, token usage, cost model and cost optimization
     current_actor_type: human
     current_actor: TBD
-    target_actor_type: TBD
+    target_actor_type: agent
     target_actor: TBD
     accountable_human: TBD
     human_approval_required: TBD
