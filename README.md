@@ -327,6 +327,33 @@ The starter deliberately leaves these areas incomplete:
 
 ---
 
+## Team setup
+
+- Operating system / environment: Windows PowerShell on Sebastian's local
+  machine; project path `C:\AgenticAi\agentic_ai_haw_2627`.
+- Python version: Python 3.12.0 in `.venv`.
+- LLM access: local Ollama with model `qwen3:4b`.
+- Database: Docker Compose service `db`, PostgreSQL 17.11 with pgvector 0.8.6,
+  reachable on localhost port 5432.
+- Setup deviations: `LLM_MAX_OUTPUT_TOKENS` is available through settings and
+  defaults to 256 so local Ollama runs have a bounded output budget. The own QA
+  agent also treats an LLM timeout as a structured `needs_review` result.
+- Known limitations: local qwen3:4b on CPU is slow for QA summarization. The
+  evidence includes one timeout escalation and later successful runs; the agent
+  has a structured timeout path so this does not block human review.
+- Starter tests: `python -m pytest` completed with 6 passed tests after adding
+  the team-owned QA agent tests.
+- Database check: `database: ok`, PostgreSQL 17.11, pgvector 0.8.6.
+- Reference model availability: `ollama list` shows `qwen3:4b`.
+- Team-owned agent evidence: `evidence/session-01/qa-test-agent-trace.jsonl`
+  contains three `SESSION-01-QA` runs for `qa-test-agent`, including successful
+  runs with token metadata where Ollama provided it.
+- Usage / credits: `costs/usage.csv` records human time, one own agent run,
+  local test verification, zero observed CI runs, and calculated course credits.
+- GitHub issues: three Termin 1 issue drafts are documented in
+  `docs/session-01-github-issues.md`; create them in GitHub if the CLI/API is
+  not authenticated on the local machine.
+
 # Compatibility policy
 
 The core dependency versions are pinned in `requirements.txt` to create the same baseline for all teams.

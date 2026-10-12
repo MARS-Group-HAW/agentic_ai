@@ -1,1 +1,5 @@
 date,task_id,actor_type,actor,quantity,unit,credits,notes
+2026-10-12,SESSION-01-SETUP,human,Sebastian,1.5,hours,150.0,Estimated human time for setup review company model architecture and agent implementation
+2026-10-12,SESSION-01-QA,agent,qa-test-agent,3,runs,16.4369,Model qwen3:4b; total duration 1324.1468 seconds; two successful traces and one timeout escalation; recorded tokens 252 input and 4760 output where available
+2026-10-12,SESSION-01-TESTS,human,Sebastian,1,local_pytest_run,0.0,Local verification run completed with 6 passed tests
+2026-10-12,SESSION-01-CI,ci,GitHub Actions,0,runs,0.0,No GitHub CI run observed locally during this Termin 1 completion
