@@ -1,0 +1,1 @@
+{"logged_at": "2026-10-12T11:17:06.319125+00:00", "run_id": "c441c84a-1936-450f-b480-28e0ec72c10a", "task_id": "SESSION-01-QA", "agent": "qa-test-agent", "model": "qwen3:4b", "status": "needs_review", "tools": ["run_pytest_tool"], "duration_seconds": 38.6033, "input_tokens": null, "output_tokens": null, "estimated_cost_credits": 1.386}

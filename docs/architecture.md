@@ -1,37 +1,47 @@
-# Architecture – initial course baseline
+# Architecture - Harbor QA Agents
 
-> Team-owned after Session 1. Adapt this document so that it reflects the real company infrastructure.
+This document describes the Termin 1 company-owned architecture.
 
 ```mermaid
 flowchart LR
-    Human[Human team members] --> GH[GitHub / Issues / PRs]
-    Agent[Team agents\nLangGraph + LangChain] --> GH
-    GH --> CI[GitHub Actions]
-    CI --> Tests[pytest]
+    Human[Sebastian\nAccountable human] --> GH[GitHub / Issues / commits]
+    Human --> Gate[Human approval gate]
 
-    API[FastAPI] --> DB[(PostgreSQL + pgvector)]
-    Agent --> API
-    Agent --> LLM{LLM adapter}
-    LLM --> Ollama[Native Ollama]
-    LLM --> ICC[HAW ICC\nOpenAI-compatible endpoint]
+    QA[qa-test-agent\nLangGraph workflow] --> Tool[run_pytest_tool\nbounded pytest execution]
+    QA --> LLM[LLM factory\nsrc.llm.factory]
+    LLM --> Ollama[Ollama qwen3:4b]
+    LLM -. optional .-> ICC[HAW ICC\nOpenAI-compatible endpoint]
 
-    Agent --> Trace[Local JSONL traces]
-    Trace --> Cost[Cost analysis]
+    Tool --> Tests[pytest targets under tests/]
+    QA --> Trace[evidence/session-01\nJSONL trace]
+    Trace --> Cost[costs/usage.csv\ncourse credits]
 
-    LangSmith[LangSmith\noptional / approval required]
-    Agent -. optional .-> LangSmith
+    API[FastAPI app] --> DB[(PostgreSQL + pgvector)]
+    Tests --> API
+    API --> Health[/health and /db/health]
+    DB --> Health
+
+    Gate --> Decision[Delivery or escalation decision]
 ```
 
-## Baseline design decisions
+## Termin 1 design decisions
 
-1. Agent orchestration uses LangGraph.
-2. LangChain provides model/integration abstractions.
-3. Team code must not depend directly on a specific LLM deployment.
-4. PostgreSQL + pgvector is the common relational and vector data platform.
-5. Local structured traces are mandatory project evidence.
-6. LangSmith is optional and cannot replace local evidence.
-7. Ollama normally runs natively on the host when used on macOS.
+1. The first own agent is `qa-test-agent` in `src/agents/qa_test_agent.py`.
+2. The real tool is `run_pytest_tool`, which executes a bounded pytest run only
+   for targets below `tests/`.
+3. LLM access goes through `src.llm.factory.get_chat_model`, so the agent can use
+   either local Ollama or the HAW ICC configuration.
+4. The agent returns structured Pydantic output with status, summary, pytest
+   exit code, findings, and a human approval flag.
+5. Error handling covers invalid test targets, missing files, and pytest timeout.
+6. Local traces are written to `evidence/session-01/qa-test-agent-trace.jsonl`.
+7. Usage and estimated course credits are recorded in `costs/usage.csv`.
+8. Sebastian reviews QA output before it affects a delivery decision.
 
-## Team changes
+## Current limitations
 
-Document all material changes here and add ADRs where appropriate.
+- The Termin 1 agent supports QA evidence only; other roles are planned for later
+  sessions.
+- Token usage is recorded only when the selected provider returns usage metadata.
+- GitHub Issues must exist in GitHub for final assessment; local issue drafts are
+  documented in `docs/session-01-github-issues.md` if online creation is blocked.

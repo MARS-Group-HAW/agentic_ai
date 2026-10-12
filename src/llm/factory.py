@@ -19,6 +19,8 @@ def get_chat_model(settings: Settings | None = None) -> Any:
             model=settings.llm_model,
             base_url=settings.llm_base_url,
             temperature=settings.llm_temperature,
+            num_predict=settings.llm_max_output_tokens,
+            reasoning=False,
         )
 
     if settings.llm_provider == "openai_compatible":
