@@ -17,10 +17,10 @@ roles:
     title: Managing Director / Customer Lead
     responsibility: Customer communication, priorities, company-level decisions
     current_actor_type: human
-    current_actor: TBD
+    current_actor: Francisco
     target_actor_type: human
-    target_actor: TBD
-    accountable_human: TBD
+    target_actor: Francisco
+    accountable_human: Francisco
     human_approval_required: true
     implementation_status: planned
 
@@ -28,77 +28,77 @@ roles:
     title: Product Owner / Requirements Engineer
     responsibility: Requirements, user stories, acceptance criteria, backlog value
     current_actor_type: human
-    current_actor: TBD
+    current_actor: Francisco
     target_actor_type: agent
-    target_actor: TBD
-    accountable_human: TBD
-    human_approval_required: TBD
+    target_actor: po_agent
+    accountable_human: Francisco
+    human_approval_required: true
     implementation_status: planned
 
   - id: project_manager
     title: Project Manager
     responsibility: Planning, task allocation, progress, dependencies, delivery risk
     current_actor_type: human
-    current_actor: TBD
+    current_actor: Caitlin
     target_actor_type: human
-    target_actor: TBD
-    accountable_human: TBD
-    human_approval_required: TBD
+    target_actor: Caitlin
+    accountable_human: Caitlin
+    human_approval_required: true
     implementation_status: planned
 
   - id: software_architect
     title: Software Architect
     responsibility: System architecture, interfaces, ADRs, technical standards
     current_actor_type: human
-    current_actor: TBD
+    current_actor: Daniil
     target_actor_type: agent
-    target_actor: TBD
-    accountable_human: TBD
-    human_approval_required: TBD
+    target_actor: software_architect_agent
+    accountable_human: Daniil
+    human_approval_required: true
     implementation_status: planned
 
   - id: backend_api_engineer
     title: Backend / API Engineer
     responsibility: FastAPI services, business logic, API contracts
     current_actor_type: human
-    current_actor: TBD
+    current_actor: Rafael
     target_actor_type: agent
-    target_actor: TBD
-    accountable_human: TBD
-    human_approval_required: TBD
+    target_actor: backend_agent
+    accountable_human: Rafael
+    human_approval_required: true
     implementation_status: planned
 
   - id: data_rag_engineer
     title: Data & RAG Engineer
     responsibility: PostgreSQL, pgvector, ingestion, chunking, retrieval, embeddings
     current_actor_type: human
-    current_actor: TBD
+    current_actor: Caitlin
     target_actor_type: agent
-    target_actor: TBD
-    accountable_human: TBD
-    human_approval_required: TBD
+    target_actor: data_rag_agent
+    accountable_human: Caitlin
+    human_approval_required: true
     implementation_status: planned
 
   - id: agent_engineer
     title: Agent Engineer
     responsibility: LangGraph workflows, LangChain integration, agent state and tools
     current_actor_type: human
-    current_actor: TBD
-    target_actor_type: TBD
-    target_actor: TBD
-    accountable_human: TBD
-    human_approval_required: TBD
+    current_actor: Caitlin
+    target_actor_type: agent
+    target_actor: agent_engineer_agent
+    accountable_human: Caitlin
+    human_approval_required: true
     implementation_status: planned
 
   - id: integration_engineer
     title: Integration Engineer
     responsibility: Agent-to-agent and agent-to-system interfaces and handovers
     current_actor_type: human
-    current_actor: TBD
-    target_actor_type: TBD
-    target_actor: TBD
-    accountable_human: TBD
-    human_approval_required: TBD
+    current_actor: Daniil
+    target_actor_type: human
+    target_actor: Daniil
+    accountable_human: Daniil
+    human_approval_required: true
     implementation_status: planned
 
   - id: qa_test_engineer
@@ -109,28 +109,28 @@ roles:
     target_actor_type: human
     target_actor: TBD
     accountable_human: TBD
-    human_approval_required: TBD
+    human_approval_required: true
     implementation_status: planned
 
   - id: devops_engineer
     title: DevOps Engineer
     responsibility: Docker, GitHub Actions, build, deployment and reproducibility
     current_actor_type: human
-    current_actor: TBD
+    current_actor: Rafael
     target_actor_type: agent
-    target_actor: TBD
-    accountable_human: TBD
-    human_approval_required: TBD
+    target_actor: devops_agent
+    accountable_human: Rafael
+    human_approval_required: true
     implementation_status: planned
 
   - id: ai_safety_security_engineer
     title: AI Safety & Security Engineer
     responsibility: Tool permissions, guardrails, secrets, prompt and agent risks
     current_actor_type: human
-    current_actor: TBD
+    current_actor: Rafael
     target_actor_type: human
-    target_actor: TBD
-    accountable_human: TBD
+    target_actor: Rafael
+    accountable_human: Rafael
     human_approval_required: true
     implementation_status: planned
 
@@ -138,9 +138,9 @@ roles:
     title: Cost & Observability Engineer
     responsibility: Traces, runtime, token usage, cost model and cost optimization
     current_actor_type: human
-    current_actor: TBD
+    current_actor: Francisco
     target_actor_type: agent
-    target_actor: TBD
-    accountable_human: TBD
-    human_approval_required: TBD
+    target_actor: cost_agent
+    accountable_human: Francisco
+    human_approval_required: true
     implementation_status: planned
