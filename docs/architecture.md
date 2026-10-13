@@ -5,21 +5,26 @@
 ```mermaid
 flowchart LR
     Human[Human team members] --> GH[GitHub / Issues / PRs]
-    Agent[Team agents\nLangGraph + LangChain] --> GH
+    Agent1[Software Architect Agent\nLangGraph + LangChain] --> HG{"Human Approval Gate\n(Review / PR Approval)"}
+    HG --> GH
     GH --> CI[GitHub Actions]
     CI --> Tests[pytest]
 
     API[FastAPI] --> DB[(PostgreSQL + pgvector)]
-    Agent --> API
-    Agent --> LLM{LLM adapter}
-    LLM --> Ollama[Native Ollama]
-    LLM --> ICC[HAW ICC\nOpenAI-compatible endpoint]
+    Human --> API
+    Agent1 --> HAG{"Human Approval Gate\n(Review)"}
+    HAG --> API
+    API --> WorkItems["Architecture Findings\n& Health Metadata"]
 
-    Agent --> Trace[Local JSONL traces]
+    Human --> Cost[Cost analysis]
+    Agent1 --> Trace[Local JSONL traces]
     Trace --> Cost[Cost analysis]
 
-    LangSmith[LangSmith\noptional / approval required]
-    Agent -. optional .-> LangSmith
+    Agent1 --> LLM{LLM adapter}
+    LLM --> Ollama[Native Ollama]
+
+    Agent1 --> Tools["Architect Tools\n- File Reader\n- ADR"]
+    Agent1 --> EH["Escalation Handler"]
 ```
 
 ## Baseline design decisions
@@ -35,3 +40,8 @@ flowchart LR
 ## Team changes
 
 Document all material changes here and add ADRs where appropriate.
+
+### Session 1:
+For the first session, we decided to make an agent for the role Software Architect. We also changed the architecture, company and role documents.
+#### ADR 1
+We needed to choose one role to make the first agent for. The Software Architect is a role that is mainly analysis focused, hence our decision to automate it first. This allows us to understand how to create agents by starting with an easier to code agent. 
